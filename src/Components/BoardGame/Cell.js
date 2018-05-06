@@ -10,7 +10,6 @@ class Cell extends Component {
 
   handleClick(e){
     e.preventDefault();
-    console.log(e.target);
     this.props.onClick(this.props.id)
   }
 
