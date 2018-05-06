@@ -153,7 +153,54 @@ class BoardGame extends Component {
       return (findIn > -1) ? true : false;
     }
 
-    return checks.filter( group => ( findInTestArray(group.found) ) );
+    let winners = checks.filter( group => ( findInTestArray(group.found) ) );
+
+    let winningValues = winners.map( win => {
+      let winOut = {
+        type: win.name,
+        scanned: [],
+        found: []
+      };
+
+      let winningIndexs = [];
+      let winToken = players[currentPlayer].value;
+      let centerIndex = win.scanned.findIndex( cell =>
+                                                cell[0] === x &&
+                                                cell[1] === y);
+
+      winningIndexs.push(centerIndex);
+      // loop to beginning
+      let i = centerIndex;
+      let isToken = true;
+      while (i > 0 && isToken) {
+        i--;
+        if(win.found[i] === winToken){
+          winningIndexs.push(i);
+        } else {
+          isToken = false;
+        }
+      }
+      // loop to end or last
+      i = centerIndex;
+      isToken = true;
+      while (i < (win.found.length -1) && isToken) {
+        i++;
+        if(win.found[i] === winToken){
+          winningIndexs.push(i);
+        } else {
+          isToken = false;
+        }
+      }
+
+      for (let i = 0; i < winningIndexs.length; i++) {
+        winOut.scanned.push(win.scanned[winningIndexs[i]]);
+        winOut.found.push(win.found[winningIndexs[i]]);
+      }
+
+      return winOut;
+
+    });
+    return winningValues;
   }
 
   resetBoard() {
@@ -229,12 +276,8 @@ class BoardGame extends Component {
         let winnerFound = this.findWinner();
 
         if(winnerFound.length >= 1){
-
-          for (var i = 0; i < winnerFound[0].scanned.length; i++) {
-            var cell = winnerFound[0].scanned[i];
-            if( winnerFound[0].found[i] === players[currentPlayer].value ) {
-              winnerCells.push(''+cell[0]+'-'+cell[1]);
-            }
+          for (var i = 0; i < winnerFound.length; i++) {
+            winnerCells = winnerCells.concat(winnerFound[i].scanned);
           }
         }
 
@@ -284,7 +327,7 @@ class BoardGame extends Component {
         let className = 'square';
 
         if(winningCells.length){
-          if(winningCells.find(cell => cell === cellKey)){
+          if(winningCells.find(cell => cell[0] === idx && cell[1] === i)){
             className = className + ' winner';
           }
         }
@@ -363,7 +406,7 @@ class BoardGame extends Component {
       <div className='game-board'>
         <div>
           <h3>Game: {this.state.gameName} </h3>
-          <p>Board size: {boardSize.x} X {boardSize.y} <br />
+          <div>Board size: {boardSize.x} X {boardSize.y} <br />
           Has Gravity:
             <input
               type='checkbox'
@@ -374,7 +417,7 @@ class BoardGame extends Component {
               {this.state.players[currentPlayer].display} <br />
             Moves {this.state.moves} of {boardSize.cells} <br />
              <button  style={{textAlign: 'center', margin: '10px'}} onClick={this.resetBoard}>Reset</button>
-          </p>
+          </div>
 
         </div>
         <div className='current-board'>
