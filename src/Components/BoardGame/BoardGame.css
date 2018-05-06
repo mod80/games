@@ -1,0 +1,50 @@
+.game-board {
+  display         : flex;
+  align-items     : center;
+  justify-content : center;
+  vertical-align  : center;
+  flex-wrap       : wrap;
+  align-content   : center;
+  margin: 10px;
+  color: #3c3c3c;
+}
+
+.current-board {
+  display         : flex;
+  /* justify-content : space-between; */
+  justify-content : center;
+
+  /* width   : 400px;
+  height  : 400px; */
+  padding : 5px;
+  border  : 1px solid #e4e4e4;
+  background: linear-gradient(to top, #eee, #fff);
+
+}
+
+.column {
+  display         : flex;
+  flex-direction  : column;
+  justify-content : space-between;
+}
+
+.square {
+  display : block;
+  width   : 125px;
+  height  : 125px;
+  border  : 1px solid #e4e4e4;
+  color       : #777;
+  font-weight : 100;
+  text-align  : center;
+  padding: 20px;
+  cursor: pointer;
+}
+
+.square.winner {
+  background-color: black;
+}
+
+/* .square:hover {
+  color: #333;
+  background: linear-gradient(to top, #ddd, #eee);
+} */

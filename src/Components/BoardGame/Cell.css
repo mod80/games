@@ -1,0 +1,14 @@
+.boardgame-cell {
+  animation: growCells .5s;
+  width   : 85px;
+  height  : 85px;
+}
+
+@keyframes growCells {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
