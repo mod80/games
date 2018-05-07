@@ -7,7 +7,7 @@ class ConnectFour extends Component {
     height: 80,
     width: 80,
     borderRadius: '50%',
-    border: '8px double black'
+    border: '4px double black'
   }
 
   connectfour = {
@@ -25,7 +25,7 @@ class ConnectFour extends Component {
       },
       {
         value: '2',
-        display: <div style={{...this.defaultPlayerStyles, backgroundColor: 'green'}} />
+        display: <div style={{...this.defaultPlayerStyles, backgroundColor: 'yellow'}} />
       }
     ],
     hasDrops: true,
