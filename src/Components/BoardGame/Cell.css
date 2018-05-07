@@ -1,14 +1,60 @@
 .boardgame-cell {
-  animation: growCells .5s;
-  width   : 85px;
-  height  : 85px;
+  width   : 80px;
+  height  : 80px;
+  position: relative;
+  -webkit-transform: 500ms ease-in-out;
+  transition: transform 500ms ease-in-out;
 }
 
-@keyframes growCells {
-  from {
-    transform: scale(0);
-  }
-  to {
-    transform: scale(1);
-  }
+.current-board.hasWinner .boardgame-cell.winner {
+  opacity: 1;
+  transform: scale(1.2);
 }
+
+.current-board.hasWinner .boardgame-cell {
+    opacity: 0.3;
+    transform: scale(0.9);
+}
+
+ .boardgame-cell .drop {
+   position: absolute;
+   animation-fill-mode: forwards;
+ }
+
+ .boardgame-cell .drop.drop-5 {
+   animation: drop-5 500ms 1;
+ }
+ .boardgame-cell .drop.drop-4 {
+   animation: drop-4 400ms 1;
+ }
+ .boardgame-cell .drop.drop-3 {
+   animation: drop-3 300ms 1;
+ }
+ .boardgame-cell .drop.drop-2 {
+   animation: drop-2 200ms 1;
+ }
+ .boardgame-cell .drop.drop-1 {
+   animation: drop-1 100ms 1;
+ }
+
+ @keyframes drop-5 {
+   0% { top: -600px; }
+   100% { top: 0px; display: none; }
+ }
+
+ @keyframes drop-4 {
+   0% { top: -500px; }
+   100% { top: 0px; }
+ }
+ @keyframes drop-3 {
+   0% { top: -375px; }
+   100% { top: 0px; }
+ }
+ @keyframes drop-2 {
+   0% { top: -250px; }
+   100% { top: 0px; }
+ }
+ @keyframes drop-1 {
+   0% { top: -125px; }
+   100% { top: 0px; }
+ }

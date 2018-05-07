@@ -10,20 +10,31 @@ class Cell extends Component {
 
   handleClick(e){
     e.preventDefault();
-    this.props.onClick(this.props.id)
+    this.props.onClick(this.props.x,this.props.y)
   }
 
   render() {
-
-    const valueClass = (this.props.value !== '') ? 'grow' : '';
+    let classes = ['boardgame-cell'];
+    let token = this.props.value;
+    classes = classes.concat(this.props.highlights);
+    if(this.props.drop && this.props.drop.hasOwnProperty('x')){
+      if(
+          this.props.drop.x === this.props.x &&
+          this.props.drop.y === this.props.y &&
+          this.props.drop.height > 0 &&
+          this.props.hasDrops
+        ){
+        classes.push('drop');
+        token = <div className={`drop drop-${this.props.drop.height}`}>{this.props.value}</div>
+      }
+    }
 
     return (
         <div
-          id={this.props.id}
-          className={this.props.className}
+          className='square'
           onClick={this.handleClick}>
-          <div className={`boardgame-cell ${valueClass}`} style={this.props.style}>
-            {this.props.value}
+          <div className={classes.join(' ')} style={this.props.style}>
+            {token}
           </div>
         </div>
     );

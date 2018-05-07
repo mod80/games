@@ -12,8 +12,8 @@ class TicTacToe extends Component {
     win: 3,
     hasGravity: false,
     players: [
-      {value: '1', display: <div style={{height: 85,width: 85, fontSize: '5em', color: 'darkred'}}>X</div> },
-      {value: '2', display: <div style={{height: 85,width: 85, fontSize: '5em', color: 'darkblue'}}>O</div> }
+      {value: '1', display: <div style={{height: 80,width: 80, fontSize: '5em', color: 'darkred',  lineHeight: '80px'}}>X</div> },
+      {value: '2', display: <div style={{height: 80,width: 80, fontSize: '5em', color: 'darkblue', lineHeight: '80px'}}>O</div> }
     ],
 
   }

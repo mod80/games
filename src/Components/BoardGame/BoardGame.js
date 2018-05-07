@@ -14,7 +14,8 @@ class BoardGame extends Component {
         cells: props.boardDimentions.x * props.boardDimentions.y
       },
       winMax: props.win,
-      hasGravity: props.hasGravity,
+      hasGravity: props.hasGravity || false,
+      hasDrops: props.hasProps || false,
       boardValues: [],
       game: {
         winnerFound: false,
@@ -28,6 +29,7 @@ class BoardGame extends Component {
         x: 0,
         y: 0
       },
+      drop: 0,
     };
     this.handleCellChange = this.handleCellChange.bind(this);
     this.setDimentions = this.setDimentions.bind(this);
@@ -238,14 +240,17 @@ class BoardGame extends Component {
     });
   }
 
-  handleCellChange(id){
+  handleCellChange(x,y){
+
+    if(this.state.game.winnerFound){
+      return false;
+    }
+
     let board = Object.assign([], this.state.boardValues);
     let players = this.state.players;
     let currentPlayer =  this.state.currentPlayer;
-    let position = {
-      x: parseInt(id.split('-')[1], 10),
-      y: parseInt(id.split('-')[2], 10),
-    }
+    let position = {x:x,y:y};
+    let drop = 0;
 
     if(this.state.hasGravity){
       let columnData = this.findby(
@@ -257,9 +262,12 @@ class BoardGame extends Component {
       for (var i = 0; i < columnData.found.length; i++) {
         if(columnData.found[i+1] === 0 && position.x < i+1){
           position.x++;
+          drop++;
         }
       }
     }
+
+
 
     if(board[position.x][position.y] === 0){
       board[position.x][position.y] = players[currentPlayer].value;
@@ -270,7 +278,12 @@ class BoardGame extends Component {
         lastPosition: {
           x: position.x,
           y: position.y
-        }
+        },
+        drop: {
+          height: drop+x,
+          x: position.x,
+          y: position.y
+        },
       }, () => {
         let winnerCells = [];
         let winnerFound = this.findWinner();
@@ -291,7 +304,7 @@ class BoardGame extends Component {
               winner: currentPlayer,
               moves: 0
             },
-            winningCells: winnerCells
+            winningCells: winnerCells,
           });
         }
       });
@@ -315,6 +328,14 @@ class BoardGame extends Component {
     }
   }
 
+
+  isWinningCell(x,y){
+    if(this.state.winningCells.find(cell => cell[0] === x && cell[1] === y)){
+      return true;
+    }
+    return false;
+  }
+
   createBoard(){
     let board = [];
     let winningCells = this.state.winningCells;
@@ -322,13 +343,11 @@ class BoardGame extends Component {
     for (var i = 0; i < this.state.boardDimentions.y; i++) {
       let cells = [];
       for (var idx = 0; idx < this.state.boardDimentions.x; idx++) {
-        let cellId = 'cell-'+idx+'-'+i;
         let cellKey = ''+idx+'-'+i;
-        let className = 'square';
-
+        let highlights = [];
         if(winningCells.length){
-          if(winningCells.find(cell => cell[0] === idx && cell[1] === i)){
-            className = className + ' winner';
+          if(this.isWinningCell(idx,i)){
+            highlights.push('winner');
           }
         }
 
@@ -339,12 +358,16 @@ class BoardGame extends Component {
           style = {color: cellInfo.color}
         }
         cells.push(<Cell
+          x={idx}
+          y={i}
           key={cellKey}
-          id={cellId}
-          className={className}
+          highlights={highlights}
           onClick={this.handleCellChange}
           value={value}
           style={style}
+          hasDrops={this.props.hasDrops}
+          drop={this.state.drop}
+          decoration={false}
         />);
       }
       board.push(<div key={(''+i)} className="column">{cells}</div>)
@@ -386,25 +409,31 @@ class BoardGame extends Component {
   componentDidUpdate(){
     setTimeout(() => {
       if(this.state.game.winnerFound){
-        let player = this.state.players[this.state.game.winner];
-        alert('The winner is: Player ' + (parseInt(this.state.game.winner,10)+1));
-        this.resetBoard();
+        //let player = this.state.players[this.state.game.winner];
+        //alert('The winner is: Player ' + (parseInt(this.state.game.winner,10)+1));
+        //this.resetBoard();
       } else {
         if(this.state.moves === this.state.boardDimentions.cells){
-          alert('The game is a draw!');
-          this.resetBoard();
+          //alert('The game is a draw!');
+          //this.resetBoard();
         }
       }
-    }, 50);
+    }, 5000);
   }
 
   render(){
     let boardSize = this.state.boardDimentions;
     let currentPlayer = this.state.currentPlayer;
     let currentPlayerNumber = currentPlayer+1;
+    let boardClasses = ['current-board'];
+    if(this.state.game.winnerFound){
+      boardClasses.push('hasWinner');
+    }
+
     return (
       <div className='game-board'>
         <div>
+
           <h3>Game: {this.state.gameName} </h3>
           <div>Board size: {boardSize.x} X {boardSize.y} <br />
           Has Gravity:
@@ -412,7 +441,8 @@ class BoardGame extends Component {
               type='checkbox'
               value={this.state.hasGravity}
               checked={this.state.hasGravity}
-              onChange={this.handleStyle.bind(this)} /> <br/><br />
+              onChange={this.handleStyle.bind(this)} /> <br/>
+            Has Drops: {((this.props.hasDrops) ? 'Yes' : 'No') }<br />
             Current Player: {currentPlayerNumber} <br />
               {this.state.players[currentPlayer].display} <br />
             Moves {this.state.moves} of {boardSize.cells} <br />
@@ -420,7 +450,7 @@ class BoardGame extends Component {
           </div>
 
         </div>
-        <div className='current-board'>
+        <div className={boardClasses.join(' ')}>
           {this.createBoard()}
         </div>
       </div>

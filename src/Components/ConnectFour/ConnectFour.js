@@ -3,6 +3,13 @@ import BoardGame from '../BoardGame/BoardGame';
 
 class ConnectFour extends Component {
 
+  defaultPlayerStyles = {
+    height: 80,
+    width: 80,
+    borderRadius: '50%',
+    border: '8px double black'
+  }
+
   connectfour = {
     name: 'ConnectFour',
     boardDimentions: {
@@ -12,9 +19,16 @@ class ConnectFour extends Component {
     win: 4,
     hasGravity: true,
     players: [
-      {value: '1', display: <div style={{height: 85,width: 85, borderRadius: '50%', backgroundColor: 'darkred', border: '8px double black'}} /> },
-      {value: '2', display: <div style={{height: 85,width: 85, borderRadius: '50%', backgroundColor: '#f7e746', border: 'double black 8px'}} /> }
+      {
+        value: '1',
+        display: <div style={{...this.defaultPlayerStyles, backgroundColor: 'darkred'}} />
+      },
+      {
+        value: '2',
+        display: <div style={{...this.defaultPlayerStyles, backgroundColor: 'green'}} />
+      }
     ],
+    hasDrops: true,
   }
 
   render() {
